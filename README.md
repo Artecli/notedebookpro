@@ -17,6 +17,10 @@ Site estático (HTML, CSS e JavaScript puro) para a NOTEDEBOOKPRO, assistência 
 ├─ 404.html                   Página de erro
 ├─ robots.txt
 ├─ sitemap.xml
+├─ llms.txt                   Índice para agentes de IA (gerado)
+├─ tools/
+│  ├─ build-llms.mjs          Gera/valida o llms.txt a partir do HTML
+│  └─ check-gtm.mjs           Confere o snippet do Google Tag Manager nas páginas
 └─ assets/
    ├─ css/styles.css          Design system e estilos de todas as páginas
    ├─ js/site.js              Configuração, menu, FAQ, revelações e formulário
@@ -128,10 +132,48 @@ Observação: o `llms.txt` é uma convenção emergente para agentes e crawlers 
 
 - Imagens em AVIF/WebP com fallback, `width`/`height` explícitos, `loading="lazy"` e `fetchpriority` no hero
 - Fonte Inter self-hosted com `preload` e `font-display: swap`
-- CSS e JS locais, sem bibliotecas de terceiros
+- CSS e JS locais, sem bibliotecas de terceiros — a única exceção é o contêiner do Google Tag Manager (`GTM-MXJTWR`), usado para medição
 - JavaScript mínimo e progressivo (menu, FAQ, revelações e formulário)
 
 As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento azul). Substitua por fotos reais da bancada, da equipe e dos equipamentos quando estiverem disponíveis, mantendo os mesmos nomes de arquivo para não quebrar o HTML — ou gere WebP/AVIF nos mesmos tamanhos.
+
+## Analytics (Google Tag Manager)
+
+O site carrega o contêiner **GTM-MXJTWR** em todas as páginas. O snippet fica em dois lugares:
+
+- `gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">` — vale para as 21 páginas geradas;
+- `index.html` → bloco equivalente no `<head>`, porque a home não passa pelo gerador.
+
+Além do carregador no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 22 páginas: loader único, dentro do `<head>`, `dataLayer` presente e `<noscript>` no `<body>`.
+
+```html
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MXJTWR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+```
+
+O bloco inline é o padrão do `gtag.js`, mas o `src` carrega o **GTM**. Na prática funciona: o `dataLayer` é criado, o contêiner sobe e as tags configuradas nele disparam — o contêiner publicado hoje já carrega GA4 (`G-MXDZ5R5CJ3`) e uma tag do Google Ads (`GT-NSKC8ZZL`), e o GA4 envia *page view* automaticamente por meio do próprio contêiner.
+
+O `gtag('js', new Date())` sozinho não envia evento para o GA4; quem dispara as tags é o que está configurado em [tagmanager.google.com](https://tagmanager.google.com/). O snippet canônico do GTM (o que o Google entrega no painel) é só isto:
+
+```html
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MXJTWR');</script>
+```
+
+A diferença entre os dois: o canônico envia o evento `gtm.js` com o horário de carregamento, usado pelo contêiner para ordenar os disparos. Com o snippet atual, esse evento não é enviado — o contêiner ainda funciona, mas eventos que dependem dele (por exemplo *Page view* configurado com acionador *All Pages* em alguns modelos) podem se comportar de forma diferente. Se aparecer divergência no GTM/GA4, troque pelo canônico.
+
+Para medir no GTM, confira em [tagmanager.google.com](https://tagmanager.google.com/):
+
+1. Tag **Google Analytics: GA4 – Configuração** com o ID de métricas.
+2. Tag **GA4 – Evento** com *Page view* e acionador *All Pages*.
+3. Acionadores de clique em links `wa.me`, `mailto:` e no botão de avaliações, se quiser medir contato.
+4. Publique a versão do contêiner — sem publicar, nada é enviado.
+
+A Política de Privacidade (`privacidade.html`, seção 4) descreve o uso de cookies, GA4 e Google Ads, com link para as políticas e para o My Ad Center. Não há banner de consentimento: se o site for operar em cenário que exija consentimento prévio (por exemplo, tráfego da União Europeia ou exigência do controlador), ative o *Consent Mode* no GTM e condicione as tags de analytics e de ads a ele.
 
 ## Publicação
 
@@ -146,4 +188,4 @@ As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento az
 
 - O menu mobile, o FAQ e o formulário funcionam sem dependências.
 - O site respeita `prefers-reduced-motion`.
-- Não há cookies de rastreamento nem analytics por padrão. Se adicionar, atualize a Política de Privacidade e implemente consentimento quando necessário.
+- Não há cookies de rastreamento além dos gerados pelo Google Tag Manager. A Política de Privacidade descreve o uso; se o cenário exigir consentimento prévio, use o *Consent Mode* no GTM.
