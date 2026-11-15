@@ -45,7 +45,10 @@ for (const file of listPages()) {
 
   if (!html.includes("window.dataLayer = window.dataLayer || [];"))
     issues.push(`${rel}: sem inicialização do dataLayer`);
-  if (!html.includes("gtag('js', new Date());")) issues.push(`${rel}: sem chamada gtag('js', ...)`);
+  if (!/window\.dataLayer\.push\(\{[^}]*'gtm\.start'[^}]*event:\s*'gtm\.js'[^}]*\}\)/.test(html))
+    issues.push(`${rel}: sem push do evento gtm.js com gtm.start`);
+  if (/gtag\('js', new Date\(\)\)/.test(html)) issues.push(`${rel}: ainda usa gtag('js', ...)`);
+  if (/function gtag\(\)/.test(html)) issues.push(`${rel}: ainda define a função gtag()`);
 
   const noscriptAt = html.indexOf(NOSCRIPT);
   if (noscriptAt === -1) issues.push(`${rel}: sem fallback <noscript> do GTM`);
