@@ -83,8 +83,35 @@ O HTML não reproduz notas, números nem depoimentos. Para exibi-los no site, us
 - Links internos entre serviços, artigos e contato
 - `sitemap.xml` e `robots.txt`
 - `404.html` com `noindex`
+- `llms.txt` na raiz, com resumo do negócio, dados oficiais e índice das páginas para agentes de IA
 
 Ao publicar em um domínio diferente, atualize as URLs absolutas em `sitemap.xml`, `robots.txt`, `canonical`, Open Graph e JSON-LD.
+
+## llms.txt (descoberta por IA)
+
+O arquivo `llms.txt` segue a convenção de [llmstxt.org](https://llmstxt.org/): título, resumo em blockquote, dados oficiais da empresa e listas de links com descrição, agrupadas por seção (`Páginas principais`, `Serviços detalhados`, `Marcas atendidas`, `Guias técnicos`, `Optional`).
+
+Ele é **gerado a partir do HTML**, não escrito à mão. Cada entrada usa o `canonical`, o H1 e a `meta description` da própria página, então o conteúdo do índice nunca diverge do site.
+
+```bash
+node tools/build-llms.mjs          # regenera llms.txt
+node tools/build-llms.mjs --check  # falha se estiver desatualizado
+```
+
+**Regra do projeto:** toda página nova indexável precisa aparecer no `llms.txt`.
+
+- Páginas de marca (`assistencia-tecnica-notebook-<marca>/`) entram automaticamente na seção *Marcas atendidas*.
+- Artigos (`blog/*.html`) entram em *Guias técnicos*, na ordem em que aparecem no `blog.html`.
+- Serviços com âncora em `servicos.html` entram em *Serviços detalhados*.
+- Qualquer outra página indexável cai em *Outras páginas* até receber uma regra própria.
+
+Fluxo ao criar uma página: adicione o HTML com `title`, `meta description`, `canonical` e `robots` indexável, inclua o link no menu/blog/sitemap e rode `node tools/build-llms.mjs`.
+
+Se algo estiver fora do lugar, ajuste `MAIN_ORDER`, `LABELS` ou as regras de seção no topo de `tools/build-llms.mjs`.
+
+Para expor o conteúdo completo (e não só o índice), a convenção prevê um `llms-full.txt` opcional — não incluído por enquanto, para não duplicar o HTML em um segundo arquivo que precisaria de manutenção própria.
+
+Observação: o `llms.txt` é uma convenção emergente para agentes e crawlers de IA. O Google Search **não** o utiliza como sinal de indexação — para o Google, o que vale é `robots.txt`, `sitemap.xml`, `canonical`, links internos e conteúdo no HTML.
 
 ## Performance e imagens
 
