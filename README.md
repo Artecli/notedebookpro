@@ -65,13 +65,24 @@ O formulário não envia dados para servidor. Ao enviar, o `site.js` valida os c
 
 ## Avaliações e prova social
 
-A seção de avaliações **não contém depoimentos, notas ou números inventados**. Ela direciona para o perfil oficial da empresa no Google Maps:
+A seção de avaliações do `index.html` exibe a **nota média, as 5 estrelas e o total de avaliações do perfil oficial da empresa no Google**, com link para o perfil. Nada é inventado: os valores vêm do Google Maps e o site não reproduz depoimentos, nomes nem avaliações individuais.
 
 ```js
 googleReviews: "https://www.google.com/maps/place/NOTEDEBOOKPRO+Assist%C3%AAncia+T%C3%A9cnica+Notebook/@-23.6278275,-46.6275078,17z/data=!3m1!4b1!4m6!3m5!1s0x94ce5b03f3082e61:0xbb389266ebc936fd!8m2!3d-23.6278275!4d-46.6275078!16s%2Fg%2F11cspb701c"
 ```
 
-O HTML não reproduz notas, números nem depoimentos. Para exibi-los no site, use um widget oficial ou depoimentos reais autorizados.
+O bloco é um **retrato estático** (snapshot) do perfil, sem JavaScript nem API paga:
+
+| Campo no HTML | Valor atual | Onde fica |
+|---|---|---|
+| `.review-value` | `4,9` | nota média |
+| `.review-stars` (SVG) | 4 estrelas cheias + 1 a 90% | `linearGradient#review-star-partial` |
+| `.review-count` | `281 avaliações` | total no Google |
+| `.review-note` | `novembro de 2026` | data da conferência |
+
+Para atualizar: confira a nota e o total no perfil do Google Maps, ajuste os três valores acima e a data em `.review-note`. Se a nota mudar de décima, ajuste também o `offset` final do gradiente (`0.9` = 90% da quinta estrela) e o `aria-label` de `.review-stars`.
+
+O `aggregateRating` **não** é incluído no JSON-LD de propósito: as diretrizes do Google restringem a marcação de avaliações agregadas de terceiros, e a nota continua visível no HTML com link para a fonte.
 
 ## SEO
 

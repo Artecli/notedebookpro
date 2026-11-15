@@ -503,16 +503,46 @@
 
           <div class="review-panel reveal">
             <div class="review-panel-head">
-              <span class="g-badge" aria-hidden="true">G</span>
+              <span class="review-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.57 5.57 0 0 1-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82Z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09A11.99 11.99 0 0 0 12 24Z"/>
+                  <path fill="#FBBC05" d="M5.27 14.29a7.2 7.2 0 0 1 0-4.58V6.62H1.29a12 12 0 0 0 0 10.76l3.98-3.09Z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75Z"/>
+                </svg>
+              </span>
               <div>
                 <strong>Avaliações no Google</strong>
                 <span>Perfil da empresa</span>
               </div>
               <span class="review-status">Google</span>
             </div>
-            <p>Não publicamos depoimentos, nomes ou notas inventadas. Consulte as avaliações diretamente no perfil oficial da empresa no Google.</p>
+
+            <!-- Nota e total de avaliações do perfil oficial. Atualizar após conferir no Google Maps. -->
+            <div class="review-rating">
+              <span class="review-value">4,9</span>
+              <span class="review-stars" role="img" aria-label="Nota 4,9 de 5 estrelas">
+                <svg viewBox="0 0 106 20" focusable="false" aria-hidden="true">
+                  <defs>
+                    <path id="review-star" d="M10 1.4l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.8l-5.2 2.7 1-5.8L1.5 7.6l5.9-.9Z"/>
+                    <linearGradient id="review-star-partial" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0.9" stop-color="#fbbf24"/>
+                      <stop offset="0.9" stop-color="#2b3550"/>
+                    </linearGradient>
+                  </defs>
+                  <use href="#review-star" x="0" fill="#fbbf24"/>
+                  <use href="#review-star" x="21.5" fill="#fbbf24"/>
+                  <use href="#review-star" x="43" fill="#fbbf24"/>
+                  <use href="#review-star" x="64.5" fill="#fbbf24"/>
+                  <use href="#review-star" x="86" fill="url(#review-star-partial)"/>
+                </svg>
+              </span>
+              <span class="review-count"><strong>281</strong> avaliações no Google</span>
+            </div>
+
+            <p>Nota e total de avaliações do perfil oficial da empresa no Google. Não reproduzimos depoimentos, nomes ou notas inventadas.</p>
             <a class="btn btn-secondary" href="https://www.google.com/maps/place/NOTEDEBOOKPRO+Assist%C3%AAncia+T%C3%A9cnica+Notebook/@-23.6278275,-46.6275078,17z/data=!3m1!4b1!4m6!3m5!1s0x94ce5b03f3082e61:0xbb389266ebc936fd!8m2!3d-23.6278275!4d-46.6275078!16s%2Fg%2F11cspb701c" data-site="google-reviews" target="_blank" rel="noopener">Consultar avaliações no Google</a>
-            <p class="review-note">As notas e os depoimentos são exibidos pelo Google.</p>
+            <p class="review-note">Nota e quantidade atualizadas em novembro de 2026. Os números atuais e os depoimentos são exibidos pelo Google.</p>
           </div>
         </div>
       </div>
