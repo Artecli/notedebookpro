@@ -84,7 +84,7 @@ const MAIN_ORDER = [
   "assistencia-tecnica-notebook-samsung/index.html",
   "assistencia-tecnica-notebook-avell/index.html",
   "assistencia-tecnica-notebook-msi/index.html",
-  "blog.html",
+  "blog/index.html",
   "sobre.html",
   "contato.html",
   "privacidade.html",
@@ -93,7 +93,7 @@ const MAIN_ORDER = [
 const LABELS = {
   "index.html": "Assistência técnica de notebook em São Paulo",
   "servicos.html": "Serviços de reparo de notebook",
-  "blog.html": "Blog técnico — índice de guias",
+  "blog/index.html": "Blog técnico — índice de guias",
   "sobre.html": "Sobre a NOTEDEBOOKPRO",
   "contato.html": "Contato e orçamento",
   "privacidade.html": "Política de Privacidade",
@@ -109,9 +109,9 @@ const sentence = (text) => {
 
 /** Ordem dos guias conforme os cards do blog, com fallback alfabético. */
 function blogOrder() {
-  const blogIndex = byRel.get("blog.html");
+  const blogIndex = byRel.get("blog/index.html");
   const listed = blogIndex
-    ? [...blogIndex.html.matchAll(/href="(blog\/[a-z0-9-]+\.html)"/g)].map((m) => m[1])
+    ? [...blogIndex.html.matchAll(/href="(?:\.\.\/)?blog\/([a-z0-9-]+)"/g)].map((m) => `blog/${m[1]}.html`)
     : [];
   const unique = [...new Set(listed)];
   const rest = pages
@@ -223,7 +223,7 @@ function build() {
     lines.push("");
     for (const service of services) {
       lines.push(
-        `- [${service.heading}](${BASE}/servicos.html#${service.id}): ${sentence(service.paragraph)}`
+        `- [${service.heading}](${BASE}/servicos#${service.id}): ${sentence(service.paragraph)}`
       );
     }
     lines.push("");

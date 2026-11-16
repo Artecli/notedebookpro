@@ -10,17 +10,21 @@ Site estático (HTML, CSS e JavaScript puro) para a NOTEDEBOOKPRO, assistência 
 ├─ servicos.html              Serviços e detalhes técnicos
 ├─ sobre.html                 Sobre a assistência
 ├─ contato.html               Contato e formulário → WhatsApp
-├─ blog.html                  Índice do blog
-├─ blog/                      7 artigos técnicos
-├─ assistencia-tecnica-notebook-*/  8 páginas de marca (Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell e MSI)
+├─ blog/
+│  ├─ index.html              Índice do blog
+│  └─ <slug>.html             7 artigos técnicos
+├─ assistencia-tecnica-notebook-*/
+│  └─ index.html              8 páginas de marca (Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell e MSI)
 ├─ privacidade.html           Política de Privacidade (LGPD)
 ├─ 404.html                   Página de erro
+├─ .htaccess                  HTTPS, www, remoção de .html e rewrite interno (Apache)
 ├─ robots.txt
 ├─ sitemap.xml
 ├─ llms.txt                   Índice para agentes de IA (gerado)
 ├─ tools/
 │  ├─ build-llms.mjs          Gera/valida o llms.txt a partir do HTML
-│  └─ check-gtm.mjs           Confere o snippet do Google Tag Manager nas páginas
+│  ├─ check-gtm.mjs           Confere o snippet do Google Tag Manager nas páginas
+│  └─ serve.mjs               Servidor local que emula o .htaccess
 └─ assets/
    ├─ css/styles.css          Design system e estilos de todas as páginas
    ├─ js/site.js              Configuração, menu, FAQ, revelações e formulário
@@ -30,19 +34,56 @@ Site estático (HTML, CSS e JavaScript puro) para a NOTEDEBOOKPRO, assistência 
 
 ## Pré-visualização local
 
-Como o site usa caminhos relativos e `fetch` não é necessário, qualquer servidor estático funciona. Exemplos:
+O site é HTML estático, mas os links internos não têm `.html`. Um servidor que apenas entrega arquivos (como `python -m http.server`) devolve **404 em `/servicos`**. Use o servidor do repositório, que emula as regras do `.htaccess`:
 
 ```powershell
-# Python
-python -m http.server 4173
-
-# Node (npx)
-npx serve .
+node tools/serve.mjs        # http://localhost:4173
+node tools/serve.mjs 8080   # outra porta
 ```
 
-Abra `http://localhost:4173`.
+Ele aplica os mesmos 301 de produção (`/servicos.html` → `/servicos`, `/index.html` → `/`), serve `/blog/` a partir de `blog/index.html` e resolve `/servicos` por rewrite interno. Se usar outra ferramenta, confirme que ela resolve URL sem extensão — se `/servicos` der 404, não é o servidor certo para testar o site.
 
-> Abrir `index.html` diretamente pelo sistema de arquivos funciona, mas um servidor local reproduz melhor o comportamento de produção.
+## URLs e canonicalização (Apache)
+
+Cada página tem **uma única URL pública, sem `.html`**. O arquivo continua `.html` no disco; quem remove a extensão é o servidor.
+
+| Arquivo no disco | URL pública |
+|---|---|
+| `index.html` | `/` |
+| `servicos.html` | `/servicos` |
+| `sobre.html` | `/sobre` |
+| `contato.html` | `/contato` |
+| `privacidade.html` | `/privacidade` |
+| `blog/index.html` | `/blog/` |
+| `blog/<slug>.html` | `/blog/<slug>` |
+| `assistencia-tecnica-notebook-<marca>/index.html` | `/assistencia-tecnica-notebook-<marca>/` |
+
+`canonical`, `og:url`, `sitemap.xml`, `llms.txt` e todos os links internos usam essa forma. Nenhum `href` do site aponta para `.html`.
+
+O `.htaccess` na raiz faz o trabalho no Apache (Hostinger):
+
+1. `http` → `https` (301).
+2. domínio sem `www` → `https://www.notedebookpro.com.br` (301).
+3. `/index.html` → `/` e `/pasta/index.html` → `/pasta/` (301).
+4. `/pagina.html` → `/pagina` (301). A exceção é `/404.html`, que precisa da extensão para o `ErrorDocument`.
+5. `/pagina/` → `/pagina` quando não existe o diretório (301) — evita 500/404 com barra sobrando.
+6. `/pagina` → serve `pagina.html` por dentro, sem mudar a barra de endereços.
+
+Como conferir depois do upload:
+
+```bash
+curl -I https://www.notedebookpro.com.br/servicos        # 200
+curl -I https://www.notedebookpro.com.br/servicos.html   # 301 → /servicos
+curl -I https://www.notedebookpro.com.br/index.html      # 301 → /
+curl -I https://www.notedebookpro.com.br/blog/           # 200
+curl -I http://notedebookpro.com.br/servicos             # 301 → https://www...
+```
+
+**Antes de subir:** se a raiz da hospedagem já tem um `.htaccess` (cache, hotlink, `php.ini`, bloqueios), **mescle** essas regras no arquivo existente em vez de sobrescrever — o Apache só lê um `.htaccess` por pasta.
+
+Para reverter, apague o `.htaccess`: o site volta a responder em `/servicos.html` (este host também resolve `/servicos` por MultiViews, mas sem os 301, o que cria URLs duplicadas).
+
+Em hospedagens que não leem `.htaccess` (Netlify, Vercel, Cloudflare Pages), o HTML não muda: a URL limpa é configurada pela própria plataforma (no caso da Vercel, `cleanUrls: true` no `vercel.json`).
 
 ## Dados de contato
 
@@ -91,7 +132,8 @@ O `aggregateRating` **não** é incluído no JSON-LD de propósito: as diretrize
 ## SEO
 
 - `title` e `meta description` únicos por página
-- `canonical` absoluto
+- `canonical` absoluto e `og:url` sempre na URL sem `.html`
+- Uma URL por página: `.html` redireciona com 301 para a forma curta (ver [URLs e canonicalização](#urls-e-canonicalização-apache))
 - Open Graph e Twitter Card
 - JSON-LD: `LocalBusiness` com `PostalAddress`, `GeoCoordinates` e `hasMap`; `Service`, `Blog`, `BlogPosting`, `BreadcrumbList`, `FAQPage` e `ContactPage`
 - Hierarquia H1 → H2 → H3
@@ -116,7 +158,7 @@ node tools/build-llms.mjs --check  # falha se estiver desatualizado
 **Regra do projeto:** toda página nova indexável precisa aparecer no `llms.txt`.
 
 - Páginas de marca (`assistencia-tecnica-notebook-<marca>/`) entram automaticamente na seção *Marcas atendidas*.
-- Artigos (`blog/*.html`) entram em *Guias técnicos*, na ordem em que aparecem no `blog.html`.
+- Artigos (`blog/*.html`) entram em *Guias técnicos*, na ordem em que aparecem no `blog/index.html`.
 - Serviços com âncora em `servicos.html` entram em *Serviços detalhados*.
 - Qualquer outra página indexável cai em *Outras páginas* até receber uma regra própria.
 
@@ -176,11 +218,12 @@ A Política de Privacidade (`privacidade.html`, seção 4) descreve o uso de coo
 ## Publicação
 
 1. Confirme os dados de contato e defina o endereço/bairro e o link do Google Business Profile.
-2. Rode um servidor local e teste todas as páginas em desktop e celular.
-3. Envie a pasta para a hospedagem (Netlify, Vercel, Cloudflare Pages, Hostinger etc.).
+2. Rode `node tools/serve.mjs` e teste todas as páginas em desktop e celular.
+3. Envie a pasta para a hospedagem (Netlify, Vercel, Cloudflare Pages, Hostinger etc.), **incluindo o `.htaccess`** e a pasta `blog/`.
 4. Configure `404.html` como página de erro personalizada no painel da hospedagem.
-5. Envie o `sitemap.xml` no Google Search Console e confirme o `robots.txt`.
-6. Valide o schema em [validator.schema.org](https://validator.schema.org/) e os dados em [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
+5. Depois do upload, confira as URLs com `curl -I` (seção [URLs e canonicalização](#urls-e-canonicalização-apache)): `/servicos` responde 200, `/servicos.html` responde 301, `http://` e domínio sem `www` redirecionam.
+6. Envie o `sitemap.xml` no Google Search Console (as URLs mudaram de `.html` para a forma curta) e confirme o `robots.txt`.
+7. Valide o schema em [validator.schema.org](https://validator.schema.org/) e os dados em [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
 
 ## Observações
 

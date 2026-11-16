@@ -19,20 +19,19 @@ Dados oficiais:
 ## Páginas principais
 
 - [Assistência técnica de notebook em São Paulo](https://www.notedebookpro.com.br/): Assistência técnica de notebooks em São Paulo: diagnóstico eletrônico, reparo de placa-mãe, BGA, vídeo e conector de carga com orçamento aprovado.
-- [Serviços de reparo de notebook](https://www.notedebookpro.com.br/servicos.html): Reparo de placa-mãe, BGA, vídeo, conector de carga, manutenção preventiva e upgrade de notebooks em São Paulo. Diagnóstico técnico e orçamento aprovado.
-- [Blog técnico — índice de guias](https://www.notedebookpro.com.br/blog.html): Conteúdo técnico sobre reparo de notebook: placa-mãe, vídeo, conector de carga, superaquecimento e manutenção. Guias da NOTEDEBOOKPRO em São Paulo.
-- [Sobre a NOTEDEBOOKPRO](https://www.notedebookpro.com.br/sobre.html): Assistência técnica especializada em notebooks em São Paulo, com foco em diagnóstico eletrônico, reparo de placa-mãe e serviços em nível de componente.
-- [Contato e orçamento](https://www.notedebookpro.com.br/contato.html): Fale com a NOTEDEBOOKPRO pelo WhatsApp ou e-mail e solicite avaliação técnica para seu notebook em São Paulo. Atendimento com agendamento.
-- [Política de Privacidade](https://www.notedebookpro.com.br/privacidade.html): Política de Privacidade da NOTEDEBOOKPRO: como dados de contato são tratados, cookies, segurança e direitos previstos na LGPD.
+- [Serviços de reparo de notebook](https://www.notedebookpro.com.br/servicos): Reparo de placa-mãe, BGA, vídeo, conector de carga, manutenção preventiva e upgrade de notebooks em São Paulo. Diagnóstico técnico e orçamento aprovado.
+- [Sobre a NOTEDEBOOKPRO](https://www.notedebookpro.com.br/sobre): Assistência técnica especializada em notebooks em São Paulo, com foco em diagnóstico eletrônico, reparo de placa-mãe e serviços em nível de componente.
+- [Contato e orçamento](https://www.notedebookpro.com.br/contato): Fale com a NOTEDEBOOKPRO pelo WhatsApp ou e-mail e solicite avaliação técnica para seu notebook em São Paulo. Atendimento com agendamento.
+- [Política de Privacidade](https://www.notedebookpro.com.br/privacidade): Política de Privacidade da NOTEDEBOOKPRO: como dados de contato são tratados, cookies, segurança e direitos previstos na LGPD.
 
 ## Serviços detalhados
 
-- [Reparo de placa-mãe](https://www.notedebookpro.com.br/servicos.html#placa-mae): A placa-mãe concentra alimentação, comunicação e controle do notebook.
-- [Reparo de chipset e BGA](https://www.notedebookpro.com.br/servicos.html#bga): Componentes BGA têm os contatos sob o encapsulamento e exigem controle de temperatura, perfil térmico adequado e ferramental específico.
-- [Reparo de vídeo](https://www.notedebookpro.com.br/servicos.html#video): Problemas de vídeo podem estar na tela, no cabo flex, no backlight, na GPU, na memória de vídeo ou na própria placa-mãe.
-- [Reparo de conector de carga](https://www.notedebookpro.com.br/servicos.html#carga): O conector de carga é um ponto de esforço mecânico e elétrico.
-- [Manutenção preventiva](https://www.notedebookpro.com.br/servicos.html#preventiva): Poeira, pasta térmica ressecada e fluxo de ar obstruído elevam a temperatura e reduzem o desempenho.
-- [Upgrade e armazenamento](https://www.notedebookpro.com.br/servicos.html#upgrade): Antes de indicar um upgrade, verificamos compatibilidade, suporte da placa e o gargalo real do equipamento.
+- [Reparo de placa-mãe](https://www.notedebookpro.com.br/servicos#placa-mae): A placa-mãe concentra alimentação, comunicação e controle do notebook.
+- [Reparo de chipset e BGA](https://www.notedebookpro.com.br/servicos#bga): Componentes BGA têm os contatos sob o encapsulamento e exigem controle de temperatura, perfil térmico adequado e ferramental específico.
+- [Reparo de vídeo](https://www.notedebookpro.com.br/servicos#video): Problemas de vídeo podem estar na tela, no cabo flex, no backlight, na GPU, na memória de vídeo ou na própria placa-mãe.
+- [Reparo de conector de carga](https://www.notedebookpro.com.br/servicos#carga): O conector de carga é um ponto de esforço mecânico e elétrico.
+- [Manutenção preventiva](https://www.notedebookpro.com.br/servicos#preventiva): Poeira, pasta térmica ressecada e fluxo de ar obstruído elevam a temperatura e reduzem o desempenho.
+- [Upgrade e armazenamento](https://www.notedebookpro.com.br/servicos#upgrade): Antes de indicar um upgrade, verificamos compatibilidade, suporte da placa e o gargalo real do equipamento.
 
 ## Marcas atendidas
 
@@ -47,13 +46,14 @@ Dados oficiais:
 
 ## Guias técnicos
 
-- [Notebook não liga: possíveis causas e o que verificar](https://www.notedebookpro.com.br/blog/notebook-nao-liga.html): Da fonte ao circuito de alimentação: entenda quais falhas impedem o notebook de ligar, o que você pode testar com segurança e quando o caso exige bancada.
-- [Notebook sem vídeo: como identificar a origem do problema](https://www.notedebookpro.com.br/blog/notebook-sem-video.html): Tela preta, imagem falhando ou sem backlight? Veja como separar falha de display, cabo, GPU e placa-mãe antes de autorizar um reparo.
-- [Reparo de placa-mãe de notebook: o que está envolvido](https://www.notedebookpro.com.br/blog/reparo-placa-mae-notebook.html): Como funciona o reparo em nível de componente, quais falhas são tratáveis e o que avaliar antes de autorizar o serviço.
-- [Notebook não carrega: do conector ao circuito de carga](https://www.notedebookpro.com.br/blog/notebook-nao-carrega.html): As causas mais comuns e como separar problema de carregador, conector, bateria e placa-mãe.
-- [Superaquecimento de notebook: causas e manutenção](https://www.notedebookpro.com.br/blog/superaquecimento-notebook.html): Por que o notebook esquenta, quando a limpeza resolve e em quais casos o problema está no circuito.
-- [Vale a pena reparar a placa-mãe do notebook?](https://www.notedebookpro.com.br/blog/vale-a-pena-reparar-placa-mae.html): Como pesar idade, valor do equipamento, disponibilidade de peças e o custo real de uma substituição antes de decidir.
-- [Como escolher uma assistência técnica de notebook em São Paulo](https://www.notedebookpro.com.br/blog/assistencia-tecnica-notebook-sao-paulo.html): Perguntas que ajudam a avaliar transparência, capacidade técnica e o que esperar do atendimento antes de entregar seu equipamento.
+- [Notebook não liga: possíveis causas e o que verificar](https://www.notedebookpro.com.br/blog/notebook-nao-liga): Da fonte ao circuito de alimentação: entenda quais falhas impedem o notebook de ligar, o que você pode testar com segurança e quando o caso exige bancada.
+- [Notebook sem vídeo: como identificar a origem do problema](https://www.notedebookpro.com.br/blog/notebook-sem-video): Tela preta, imagem falhando ou sem backlight? Veja como separar falha de display, cabo, GPU e placa-mãe antes de autorizar um reparo.
+- [Reparo de placa-mãe de notebook: o que está envolvido](https://www.notedebookpro.com.br/blog/reparo-placa-mae-notebook): Como funciona o reparo em nível de componente, quais falhas são tratáveis e o que avaliar antes de autorizar o serviço.
+- [Notebook não carrega: do conector ao circuito de carga](https://www.notedebookpro.com.br/blog/notebook-nao-carrega): As causas mais comuns e como separar problema de carregador, conector, bateria e placa-mãe.
+- [Superaquecimento de notebook: causas e manutenção](https://www.notedebookpro.com.br/blog/superaquecimento-notebook): Por que o notebook esquenta, quando a limpeza resolve e em quais casos o problema está no circuito.
+- [Vale a pena reparar a placa-mãe do notebook?](https://www.notedebookpro.com.br/blog/vale-a-pena-reparar-placa-mae): Como pesar idade, valor do equipamento, disponibilidade de peças e o custo real de uma substituição antes de decidir.
+- [Como escolher uma assistência técnica de notebook em São Paulo](https://www.notedebookpro.com.br/blog/assistencia-tecnica-notebook-sao-paulo): Perguntas que ajudam a avaliar transparência, capacidade técnica e o que esperar do atendimento antes de entregar seu equipamento.
+- [Blog técnico — índice de guias](https://www.notedebookpro.com.br/blog/): Conteúdo técnico sobre reparo de notebook: placa-mãe, vídeo, conector de carga, superaquecimento e manutenção. Guias da NOTEDEBOOKPRO em São Paulo.
 
 ## Optional
 
