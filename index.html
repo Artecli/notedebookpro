@@ -5,10 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google Tag Manager -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    const autoLoadDuration = 5;
+
+    function loadGTM() {
+
+      if (window.gtmLoaded) return;
+      window.gtmLoaded = true;
+
+      window.dataLayer = window.dataLayer || [];
+
+      dataLayer.push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+
+      const gtmScript = document.createElement('script');
+
+      gtmScript.async = true;
+      gtmScript.src =
+        'https://www.googletagmanager.com/gtm.js?id=GTM-MXJTWR';
+
+      document.head.appendChild(gtmScript);
+    }
+
+    const events = [
+      'mousemove',
+      'keydown',
+      'scroll',
+      'touchstart',
+      'click'
+    ];
+
+    const timeout = setTimeout(loadGTM, autoLoadDuration * 1000);
+
+    function triggerLoad() {
+
+      clearTimeout(timeout);
+
+      loadGTM();
+
+      events.forEach(event => {
+        window.removeEventListener(event, triggerLoad);
+      });
+    }
+
+    events.forEach(event => {
+      window.addEventListener(event, triggerLoad, {
+        passive: true
+      });
+    });
   </script>
-  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MXJTWR"></script>
   <title>Assistência Técnica Notebook em São Paulo | NOTEDEBOOKPRO</title>
   <meta name="description" content="Assistência técnica de notebooks em São Paulo: diagnóstico eletrônico, reparo de placa-mãe, BGA, vídeo e conector de carga com orçamento aprovado.">
   <link rel="canonical" href="https://www.notedebookpro.com.br/">

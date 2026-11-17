@@ -181,12 +181,12 @@ As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento az
 
 ## Analytics (Google Tag Manager)
 
-O site carrega o contêiner **GTM-MXJTWR** em todas as páginas. O snippet fica em dois lugares:
+O site carrega o contêiner **GTM-MXJTWR** em todas as páginas, em duas variantes:
 
-- `gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">` — vale para as 21 páginas geradas;
-- `index.html` → bloco equivalente no `<head>`, porque a home não passa pelo gerador.
+- **21 páginas geradas** (`gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">`): loader estático, como no snippet oficial;
+- **home (`index.html`)**: loader **diferido**, que só injeta o `gtm.js` depois de 5 s ou da primeira interação do usuário.
 
-Além do carregador no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 22 páginas: loader único, dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`.
+Além do loader no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 22 páginas: loader único (estático ou diferido), dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`; no fim, lista as páginas com carregamento diferido.
 
 ```html
 <!-- Google Tag Manager -->
@@ -198,6 +198,51 @@ Além do carregador no `<head>`, cada página tem o fallback `<noscript>` com o 
 ```
 
 Essa é a variante "explícita" do snippet oficial do Google: inicializa o `dataLayer` e envia `gtm.js` com o timestamp `gtm.start`, que é o que ordena os disparos dentro do contêiner. O snippet canônico do painel faz o mesmo em uma linha só (IIFE que injeta o script); escolhemos a forma explícita porque deixa o `dataLayer` visível no HTML e dispensa `document.write`/injeção.
+
+### Home: carregamento diferido
+
+A home não usa o bloco acima. Ela carrega o contêiner **depois de 5 segundos ou da primeira interação** (`mousemove`, `keydown`, `scroll`, `touchstart` ou `click`), para o download do GTM não competir com o LCP da página:
+
+- `loadGTM()` inicializa o `dataLayer`, envia `gtm.js` com `gtm.start` e injeta o `<script>` do GTM no `<head>`;
+- `window.gtmLoaded` garante carregamento único, mesmo que vários eventos disparem juntos;
+- o `setTimeout` de `autoLoadDuration` (5 s) é a rede de segurança para visitas sem interação;
+- no primeiro gatilho, o timeout é cancelado e os listeners são removidos.
+
+```html
+<!-- Google Tag Manager -->
+<script>
+  const autoLoadDuration = 5; // segundos
+
+  function loadGTM() {
+    if (window.gtmLoaded) return;
+    window.gtmLoaded = true;
+
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+
+    const gtmScript = document.createElement('script');
+    gtmScript.async = true;
+    gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-MXJTWR';
+
+    document.head.appendChild(gtmScript);
+  }
+
+  const events = ['mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+  const timeout = setTimeout(loadGTM, autoLoadDuration * 1000);
+
+  function triggerLoad() {
+    clearTimeout(timeout);
+    loadGTM();
+    events.forEach((event) => window.removeEventListener(event, triggerLoad));
+  }
+
+  events.forEach((event) =>
+    window.addEventListener(event, triggerLoad, { passive: true })
+  );
+</script>
+```
+
+**Impacto na medição:** o `page_view` da home só é enviado depois desses 5 s (ou do primeiro sinal de interação). Visitas que fecham a aba antes disso não entram no GA4, e a sessão começa mais tarde. As 21 páginas internas continuam carregando o GTM imediatamente. Para reverter a home ao carregamento imediato, basta trocar o bloco pelo snippet estático das demais páginas e rodar `node tools/check-gtm.mjs`.
 
 Dois detalhes que valem para quem for mexer:
 

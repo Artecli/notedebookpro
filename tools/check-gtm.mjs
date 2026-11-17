@@ -14,9 +14,13 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTAINER = "GTM-MXJTWR";
-const LOADER = `<script async src="https://www.googletagmanager.com/gtm.js?id=${CONTAINER}"></script>`;
+const GTM_URL = `https://www.googletagmanager.com/gtm.js?id=${CONTAINER}`;
+const LOADER = `<script async src="${GTM_URL}"></script>`;
 const NOSCRIPT = `https://www.googletagmanager.com/ns.html?id=${CONTAINER}`;
 const IGNORED_DIRS = new Set(["assets", ".git", "tools", "node_modules"]);
+
+/** Variante diferida: cria o <script> do GTM e só insere no <head> ao carregar. */
+const DEFERRED = /document\.createElement\(\s*['"]script['"]\s*\)[\s\S]*?document\.head\.appendChild\(/;
 
 function listPages(dir = ROOT) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -29,6 +33,7 @@ function listPages(dir = ROOT) {
 }
 
 const issues = [];
+const deferred = [];
 const count = (text, needle) => text.split(needle).length - 1;
 
 for (const file of listPages()) {
@@ -37,15 +42,21 @@ for (const file of listPages()) {
 
   const headEnd = html.indexOf("</head>");
   const bodyStart = html.indexOf("<body");
-  const loaderAt = html.indexOf(LOADER);
+  const staticLoader = html.includes(LOADER);
+  const deferredLoader = !staticLoader && DEFERRED.test(html);
+  const loaderAt = html.indexOf(GTM_URL);
 
-  if (loaderAt === -1) issues.push(`${rel}: sem loader do GTM`);
-  else if (headEnd === -1 || loaderAt > headEnd) issues.push(`${rel}: loader fora do <head>`);
-  if (count(html, LOADER) > 1) issues.push(`${rel}: loader duplicado`);
+  if (!staticLoader && !deferredLoader) {
+    issues.push(`${rel}: sem loader do GTM (estático ou diferido)`);
+  } else if (headEnd === -1 || loaderAt === -1 || loaderAt > headEnd) {
+    issues.push(`${rel}: loader fora do <head>`);
+  }
+  if (count(html, GTM_URL) > 1) issues.push(`${rel}: loader duplicado`);
+  if (deferredLoader) deferred.push(rel);
 
   if (!html.includes("window.dataLayer = window.dataLayer || [];"))
     issues.push(`${rel}: sem inicialização do dataLayer`);
-  if (!/window\.dataLayer\.push\(\{[^}]*'gtm\.start'[^}]*event:\s*'gtm\.js'[^}]*\}\)/.test(html))
+  if (!/(?:window\.)?dataLayer\.push\(\{[^}]*'gtm\.start'[^}]*event:\s*'gtm\.js'[^}]*\}\)/.test(html))
     issues.push(`${rel}: sem push do evento gtm.js com gtm.start`);
   if (/gtag\('js', new Date\(\)\)/.test(html)) issues.push(`${rel}: ainda usa gtag('js', ...)`);
   if (/function gtag\(\)/.test(html)) issues.push(`${rel}: ainda define a função gtag()`);
@@ -64,4 +75,7 @@ console.log(
     ? `GTM com problemas em ${new Set(issues.map((i) => i.split(":")[0])).size} de ${pages} páginas:\n- ${issues.join("\n- ")}`
     : `GTM ${CONTAINER} no <head> e <noscript> no <body> nas ${pages} páginas HTML.`
 );
+if (!issues.length && deferred.length) {
+  console.log(`Carregamento diferido (5 s ou primeira interação): ${deferred.join(", ")}.`);
+}
 process.exit(issues.length ? 1 : 0);
