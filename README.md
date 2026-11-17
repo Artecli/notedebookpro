@@ -74,10 +74,13 @@ Como conferir depois do upload:
 ```bash
 curl -I https://www.notedebookpro.com.br/servicos        # 200
 curl -I https://www.notedebookpro.com.br/servicos.html   # 301 → /servicos
+curl -I https://www.notedebookpro.com.br/servicos/       # 301 → /servicos
 curl -I https://www.notedebookpro.com.br/index.html      # 301 → /
 curl -I https://www.notedebookpro.com.br/blog/           # 200
 curl -I http://notedebookpro.com.br/servicos             # 301 → https://www...
 ```
+
+**Cloudflare:** o site está atrás do proxy, então o TLS termina na borda e o `http → https` do visitante é feito pelo *Always Use HTTPS* do Cloudflare. A regra 1 do `.htaccess` só age quando a requisição **não** passa pelo Cloudflare (`CF-Connecting-IP` ausente) — assim não há loop caso o SSL do Cloudflare esteja em *Flexible*. Depois de subir o arquivo, limpe o cache do Cloudflare: o HTML fica até 1 hora no edge.
 
 **Antes de subir:** se a raiz da hospedagem já tem um `.htaccess` (cache, hotlink, `php.ini`, bloqueios), **mescle** essas regras no arquivo existente em vez de sobrescrever — o Apache só lê um `.htaccess` por pasta.
 

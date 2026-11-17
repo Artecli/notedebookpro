@@ -1,42 +1,49 @@
-# NOTEDEBOOKPRO — canonicalização de URL (Apache)
+# NOTEDEBOOKPRO — canonicalização de URL (Apache / Hostinger)
 #
-# Objetivo: uma única URL por página.
-#   https://www.notedebookpro.com.br/servicos   (sem .html)
-#   https://www.notedebookpro.com.br/blog/      (índice do blog)
-#   https://www.notedebookpro.com.br/assistencia-tecnica-notebook-dell/
+# Instale na raiz do site (public_html) com o nome EXATO ".htaccess".
+# Substitua o conteúdo do arquivo existente — o Apache lê apenas um .htaccess
+# por pasta, então não "somar" regras em dois arquivos.
 #
-# Regras: força HTTPS, força www, remove .html (301) e serve o arquivo .html
-# internamente. Sem esta configuração o site continua funcionando: o Apache
-# desta hospedagem já resolve /servicos a partir de servicos.html.
+# URL canônica de cada página (a mesma do <link rel="canonical">):
+#   https://www.notedebookpro.com.br/
+#   https://www.notedebookpro.com.br/servicos
+#   https://www.notedebookpro.com.br/blog/
+#   https://www.notedebookpro.com.br/blog/<slug>
+#   https://www.notedebookpro.com.br/assistencia-tecnica-notebook-<marca>/
 
 DirectoryIndex index.html
+AddDefaultCharset UTF-8
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # 1. HTTPS
+  # 1) HTTPS — aplicado só quando o acesso não passa pelo Cloudflare.
+  #    Atrás do Cloudflare o TLS já foi terminado na borda; redirecionar de novo
+  #    aqui criaria loop (ERR_TOO_MANY_REDIRECTS) se o SSL estiver em "Flexible".
   RewriteCond %{HTTPS} !=on
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{HTTP:CF-Connecting-IP} ^$
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-  # 2. Domínio canônico: www
-  RewriteCond %{HTTP_HOST} !^www\. [NC]
-  RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # 2) Domínio sem www -> www (o canonical do site é www).
+  RewriteCond %{HTTP_HOST} ^notedebookpro\.com\.br$ [NC]
+  RewriteRule ^ https://www.notedebookpro.com.br%{REQUEST_URI} [R=301,L]
 
-  # 3. /index.html e /pasta/index.html -> / e /pasta/
+  # 3) /index.html -> /  e  /pasta/index.html -> /pasta/
   RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
   RewriteRule ^ /%1 [R=301,L]
 
-  # 4. /pagina.html -> /pagina (a página de erro permanece em /404.html)
+  # 4) /pagina.html -> /pagina
+  #    A página de erro é a única exceção: /404.html precisa da extensão.
   RewriteCond %{REQUEST_URI} !^/404\.html$ [NC]
   RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
   RewriteRule ^ /%1 [R=301,L]
 
-  # 5. Barra final em URL que não é diretório: /servicos/ -> /servicos
+  # 5) /pagina/ -> /pagina quando não existe esse diretório.
+  #    Sem isso, /servicos/ devolve 500 nesta hospedagem.
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+?)/$ /$1 [R=301,L]
 
-  # 6. URL sem extensão -> arquivo .html (interno, sem alterar a barra de endereço)
+  # 6) /pagina -> serve pagina.html internamente, sem mudar a barra de endereços.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME}\.html -f
@@ -44,3 +51,8 @@ DirectoryIndex index.html
 </IfModule>
 
 ErrorDocument 404 /404.html
+
+# Opcional: desative a listagem de diretórios se o painel da hospedagem não fizer isso.
+# Em algumas hospedagens "Options" é bloqueado no .htaccess e causa erro 500 —
+# por isso fica comentado. Descomente e teste; se der 500, comente novamente.
+# Options -Indexes
