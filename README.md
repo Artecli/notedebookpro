@@ -15,6 +15,8 @@ Site estático (HTML, CSS e JavaScript puro) para a NOTEDEBOOKPRO, assistência 
 │  └─ <slug>.html             7 artigos técnicos
 ├─ assistencia-tecnica-notebook-*/
 │  └─ index.html              19 páginas de marca: 10 marcas (Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell, MSI, VAIO e Compaq) + 9 linhas gamer/workstation
+├─ assistencia-tecnica-notebook-*/
+│  └─ index.html              27 páginas de bairro/região (Zona Sul, Centro e Zona Oeste) — links na seção #regioes da home
 ├─ privacidade.html           Política de Privacidade (LGPD)
 ├─ 404.html                   Página de erro
 ├─ .htaccess                  HTTPS, www, remoção de .html e rewrite interno (Apache)
@@ -98,6 +100,20 @@ São 19 páginas de marca, todas em `/assistencia-tecnica-notebook-<slug>/`:
 Cada página tem hero com o wordmark da marca, introdução, chips das linhas atendidas, o bloco **"Características de cada família"** (`<dl class="brand-families">`, com o que muda de projeto para projeto), texto técnico com link para um guia do blog e três dúvidas frequentes. No fim, "Outras marcas e linhas" mostra no máximo 8 páginas relacionadas — 5 do mesmo grupo e 3 do outro —, para não inflar a malha de links.
 
 Na home, a grade de marcas tem 12 células em 4 colunas no desktop (3 no tablet e 2 no celular): as 10 marcas, a célula **"Outras marcas"** e a célula **"Modelos gamer"**, que leva à seção `#gamer`, com as 9 linhas em `.brand-cross--five` (5 colunas no desktop, 2 no tablet e 1 no celular).
+
+## Bairros e regiões
+
+São **27 páginas locais**, todas em `/assistencia-tecnica-notebook-<bairro>/`, com o mesmo prefixo das páginas de marca:
+
+- **Zona Sul** (24): página-guia da região, Vila Mariana, Vila Moraes, Vila Carioca, Santa Cruz, Sacomã, Paraíso, Moinho Velho, Moema, Jardim Maria Estela, Vila Liviero, Dom Vilares, Chácara Klabin, Vila Clementino, São João Clímaco, Jabaquara, Ipiranga, Indianópolis, Bosque da Saúde, Saúde, Praça da Árvore, Chácara Flora, Ibirapuera e Campo Belo.
+- **Centro** (2): Aclimação e Bela Vista.
+- **Zona Oeste** (1): Pinheiros.
+
+Cada página tem `Service` com `areaServed` no bairro, `BreadcrumbList`, `FAQPage`, introdução com referências reais de acesso (metrô, avenidas, parques), sintomas que justificam avaliação, "Bairros e regiões próximos" e três dúvidas frequentes. Nenhuma página afirma atendimento em domicílio: o atendimento presencial é na bancada, com agendamento.
+
+A seção **`#regioes` da home** (não fica no menu) reúne o mapa incorporado da bancada, os dados de atendimento e um botão para cada bairro, agrupados por região. É o ponto de entrada da malha de links locais: cada página de bairro aponta de volta para `/#regioes`.
+
+Como bairros e marcas compartilham o prefixo `assistencia-tecnica-notebook-`, o `tools/build-llms.mjs` mantém a lista `REGION_SLUGS` para separar as duas seções no `llms.txt`. Ao criar uma página local nova, acrescente o slug nessa lista.
 
 ## Dados de contato
 
@@ -197,10 +213,10 @@ As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento az
 
 O site carrega o contêiner **GTM-MXJTWR** em todas as páginas, em duas variantes:
 
-- **32 páginas geradas** (`gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">`): loader estático, como no snippet oficial;
+- **59 páginas geradas** (`gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">`): loader estático, como no snippet oficial;
 - **home (`index.html`)**: loader **diferido**, que só injeta o `gtm.js` depois de 5 s ou da primeira interação do usuário.
 
-Além do loader no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 33 páginas: loader único (estático ou diferido), dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`; no fim, lista as páginas com carregamento diferido.
+Além do loader no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 60 páginas: loader único (estático ou diferido), dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`; no fim, lista as páginas com carregamento diferido.
 
 ```html
 <!-- Google Tag Manager -->

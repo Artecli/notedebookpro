@@ -99,6 +99,44 @@ const LABELS = {
   "privacidade.html": "Política de Privacidade",
 };
 
+/**
+ * Páginas de bairro/região usam o mesmo prefixo das páginas de marca
+ * (assistencia-tecnica-notebook-*). A lista explícita separa as duas seções.
+ */
+const REGION_SLUGS = new Set([
+  "assistencia-tecnica-notebook-zona-sul",
+  "assistencia-tecnica-notebook-vila-mariana",
+  "assistencia-tecnica-notebook-vila-moraes",
+  "assistencia-tecnica-notebook-vila-carioca",
+  "assistencia-tecnica-notebook-santa-cruz",
+  "assistencia-tecnica-notebook-sacoma",
+  "assistencia-tecnica-notebook-paraiso",
+  "assistencia-tecnica-notebook-moinho-velho",
+  "assistencia-tecnica-notebook-moema",
+  "assistencia-tecnica-notebook-maria-estela",
+  "assistencia-tecnica-notebook-liviero",
+  "assistencia-tecnica-notebook-dom-vilares",
+  "assistencia-tecnica-notebook-chacara-klabin",
+  "assistencia-tecnica-notebook-vila-clementino",
+  "assistencia-tecnica-notebook-joao-climaco",
+  "assistencia-tecnica-notebook-jabaquara",
+  "assistencia-tecnica-notebook-ipiranga",
+  "assistencia-tecnica-notebook-indianopolis",
+  "assistencia-tecnica-notebook-bosque-saude",
+  "assistencia-tecnica-notebook-saude",
+  "assistencia-tecnica-notebook-praca-arvore",
+  "assistencia-tecnica-notebook-chacara-flora",
+  "assistencia-tecnica-notebook-ibirapuera",
+  "assistencia-tecnica-notebook-campo-belo",
+  "assistencia-tecnica-notebook-aclimacao",
+  "assistencia-tecnica-notebook-bela-vista",
+  "assistencia-tecnica-notebook-pinheiros",
+]);
+
+const regionSlugOf = (rel) => rel.replace(/\/index\.html$/, "");
+
+const isRegionPage = (rel) => REGION_SLUGS.has(regionSlugOf(rel));
+
 const labelFor = (page) => LABELS[page.rel] || page.h1 || page.title;
 
 const sentence = (text) => {
@@ -155,10 +193,20 @@ function buildEntries() {
 
   const brandPattern = /^assistencia-tecnica-notebook-[a-z0-9-]+\/index\.html$/;
   const brands = [
-    ...MAIN_ORDER.filter((rel) => brandPattern.test(rel)),
+    ...MAIN_ORDER.filter((rel) => brandPattern.test(rel) && !isRegionPage(rel)),
     ...pages
       .map((page) => page.rel)
-      .filter((rel) => brandPattern.test(rel))
+      .filter((rel) => brandPattern.test(rel) && !isRegionPage(rel))
+      .sort((a, b) => a.localeCompare(b, "pt-BR")),
+  ]
+    .map(take)
+    .filter(Boolean);
+
+  const places = [
+    "assistencia-tecnica-notebook-zona-sul/index.html",
+    ...pages
+      .map((page) => page.rel)
+      .filter((rel) => brandPattern.test(rel) && isRegionPage(rel))
       .sort((a, b) => a.localeCompare(b, "pt-BR")),
   ]
     .map(take)
@@ -172,7 +220,7 @@ function buildEntries() {
     .map((page) => take(page.rel))
     .filter(Boolean);
 
-  return { main, brands, guides, others };
+  return { main, brands, places, guides, others };
 }
 
 /* ------------------------------------------------------------------ */
@@ -186,7 +234,7 @@ function entry(page, url = page.canonical) {
 }
 
 function build() {
-  const { main, brands, guides, others } = buildEntries();
+  const { main, brands, places, guides, others } = buildEntries();
   const services = serviceAnchors();
   const lines = [];
 
@@ -233,6 +281,13 @@ function build() {
     lines.push("## Marcas atendidas");
     lines.push("");
     for (const page of brands) lines.push(entry(page));
+    lines.push("");
+  }
+
+  if (places.length) {
+    lines.push("## Bairros e regiões atendidas");
+    lines.push("");
+    for (const page of places) lines.push(entry(page));
     lines.push("");
   }
 
