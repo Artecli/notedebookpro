@@ -204,8 +204,10 @@ Observação: o `llms.txt` é uma convenção emergente para agentes e crawlers 
 
 - Imagens em AVIF/WebP com fallback, `width`/`height` explícitos, `loading="lazy"` e `fetchpriority` no hero
 - Fonte Inter self-hosted com `preload` e `font-display: swap`
+  - junto dela vai um `@font-face` **"Inter Fallback"** (Arial/Helvetica) calibrado com `size-adjust` e `ascent/descent-override` para ocupar exatamente a mesma largura e altura de linha da Inter. Sem isso, a troca da fonte ao carregar gerava **CLS de ~0,24 no desktop**; com o fallback calibrado o CLS fica em 0 (medido com a fonte atrasada em 2,5 s)
 - CSS e JS locais, sem bibliotecas de terceiros — a única exceção é o contêiner do Google Tag Manager (`GTM-MXJTWR`), usado para medição
 - JavaScript mínimo e progressivo (menu, FAQ, revelações e formulário)
+- Cache do navegador definido no `.htaccess`: HTML `no-cache`/revalidação, CSS e JS por 30 dias, imagens por 6 meses e fontes por 1 ano (`immutable`), além de gzip/deflate na origem. Ao trocar uma imagem mantendo o mesmo nome, ela pode demorar até 6 meses para atualizar — prefira renomear o arquivo
 
 As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento azul). Substitua por fotos reais da bancada, da equipe e dos equipamentos quando estiverem disponíveis, mantendo os mesmos nomes de arquivo para não quebrar o HTML — ou gere WebP/AVIF nos mesmos tamanhos.
 
@@ -297,8 +299,9 @@ A Política de Privacidade (`privacidade.html`, seção 4) descreve o uso de coo
 3. Envie a pasta para a hospedagem (Netlify, Vercel, Cloudflare Pages, Hostinger etc.), **incluindo o `.htaccess`** e a pasta `blog/`.
 4. Configure `404.html` como página de erro personalizada no painel da hospedagem.
 5. Depois do upload, confira as URLs com `curl -I` (seção [URLs e canonicalização](#urls-e-canonicalização-apache)): `/servicos` responde 200, `/servicos.html` responde 301, `http://` e domínio sem `www` redirecionam.
-6. Envie o `sitemap.xml` no Google Search Console (as URLs mudaram de `.html` para a forma curta) e confirme o `robots.txt`.
-7. Valide o schema em [validator.schema.org](https://validator.schema.org/) e os dados em [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
+6. Com o site atrás do Cloudflare, **purge o cache** depois de cada envio (Caching → Configuration → Purge Everything) e confira os cabeçalhos com `curl -I https://www.notedebookpro.com.br/assets/css/styles.css`: deve vir `cache-control: public, max-age=2592000` e `content-encoding: br`/`gzip`. Sem o purge, o HTML antigo pode continuar sendo servido na borda mesmo com o `.htaccess` novo.
+7. Envie o `sitemap.xml` no Google Search Console (as URLs mudaram de `.html` para a forma curta) e confirme o `robots.txt`.
+8. Valide o schema em [validator.schema.org](https://validator.schema.org/) e os dados em [search.google.com/test/rich-results](https://search.google.com/test/rich-results).
 
 ## Observações
 

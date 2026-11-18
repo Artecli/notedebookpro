@@ -52,6 +52,66 @@ AddDefaultCharset UTF-8
 
 ErrorDocument 404 /404.html
 
+# ---------------------------------------------------------------------------
+# Desempenho — compressão na origem (o Cloudflare também comprime na borda)
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Desempenho — cache do navegador
+#
+# Regra de ouro: HTML nunca fica preso em cache; o que é versionado por nome
+# (imagens, fontes) pode ficar meses; CSS/JS ficam 30 dias porque o nome do
+# arquivo não muda. Ao trocar uma imagem mantendo o mesmo nome, ela pode levar
+# até 6 meses para atualizar em quem já visitou — prefira renomear o arquivo.
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType image/avif "access plus 6 months"
+  ExpiresByType image/webp "access plus 6 months"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType image/jpeg "access plus 6 months"
+  ExpiresByType image/svg+xml "access plus 6 months"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000, stale-while-revalidate=86400"
+  </FilesMatch>
+  <FilesMatch "\.(woff2|woff|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(avif|webp|png|jpe?g|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=15552000, stale-while-revalidate=604800"
+  </FilesMatch>
+  # Cabeçalhos de segurança leves (não interferem no Cloudflare)
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Tipos MIME que algumas hospedagens ainda não reconhecem
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
 # Opcional: desative a listagem de diretórios se o painel da hospedagem não fizer isso.
 # Em algumas hospedagens "Options" é bloqueado no .htaccess e causa erro 500 —
 # por isso fica comentado. Descomente e teste; se der 500, comente novamente.
