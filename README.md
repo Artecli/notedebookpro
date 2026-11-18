@@ -111,7 +111,7 @@ São **27 páginas locais**, todas em `/assistencia-tecnica-notebook-<bairro>/`,
 
 Cada página tem `Service` com `areaServed` no bairro, `BreadcrumbList`, `FAQPage`, introdução com referências reais de acesso (metrô, avenidas, parques), sintomas que justificam avaliação, "Bairros e regiões próximos" e três dúvidas frequentes. Nenhuma página afirma atendimento em domicílio: o atendimento presencial é na bancada, com agendamento.
 
-A seção **`#regioes` da home** (não fica no menu) reúne o mapa incorporado da bancada, os dados de atendimento e um botão para cada bairro, agrupados por região. É o ponto de entrada da malha de links locais: cada página de bairro aponta de volta para `/#regioes`.
+A seção **`#regioes` da home** (não fica no menu) reúne um **mapa esquemático em SVG** (sem iframe e sem escala), os dados de atendimento e um botão para cada bairro, agrupados por região. Cada pino do mapa aponta para a página do bairro e fica ligado ao botão correspondente por `data-region`: ao passar o mouse ou focar um botão, o pino se realça, e vice-versa. O SVG é decorativo (`aria-hidden`) e tem `tabindex="-1"` nos links, de modo que a navegação acessível são os botões. O mapa real, com o Google Maps incorporado, fica em `/contato`. É o ponto de entrada da malha de links locais: cada página de bairro aponta de volta para `/#regioes`.
 
 Como bairros e marcas compartilham o prefixo `assistencia-tecnica-notebook-`, o `tools/build-llms.mjs` mantém a lista `REGION_SLUGS` para separar as duas seções no `llms.txt`. Ao criar uma página local nova, acrescente o slug nessa lista.
 

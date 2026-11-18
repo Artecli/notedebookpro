@@ -166,6 +166,33 @@
     });
   });
 
+  /* Mapa de regiões: pino e botão do mesmo bairro se realçam juntos */
+  var regionTargets = document.querySelectorAll("[data-region]");
+  if (regionTargets.length) {
+    var clearRegions = function () {
+      regionTargets.forEach(function (el) {
+        el.classList.remove("is-active");
+      });
+    };
+    var highlightRegion = function (slug) {
+      clearRegions();
+      regionTargets.forEach(function (el) {
+        if (el.getAttribute("data-region") === slug) el.classList.add("is-active");
+      });
+    };
+    regionTargets.forEach(function (el) {
+      var slug = el.getAttribute("data-region");
+      ["mouseenter", "focus"].forEach(function (type) {
+        el.addEventListener(type, function () {
+          highlightRegion(slug);
+        });
+      });
+      ["mouseleave", "blur"].forEach(function (type) {
+        el.addEventListener(type, clearRegions);
+      });
+    });
+  }
+
   /* Formulário → WhatsApp (sem backend) */
   var contactForm = document.querySelector("[data-contact-form]");
   if (contactForm) {
