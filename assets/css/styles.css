@@ -1246,11 +1246,46 @@ body.menu-open .nav-toggle .icon-close {
   font-size: 12.5px;
   line-height: 1.2;
 }
+.brand-families-title {
+  margin-top: 42px;
+}
+.brand-families {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.brand-families div {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(11, 18, 40, 0.55);
+}
+.brand-families dt {
+  margin-bottom: 6px;
+  color: #dbe5fa;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.brand-families dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+@media (max-width: 700px) {
+  .brand-families {
+    grid-template-columns: 1fr;
+  }
+}
 .brand-cross {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-top: 26px;
+}
+.brand-cross--five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 .brand-cross a {
   display: flex;
@@ -1279,12 +1314,14 @@ body.menu-open .nav-toggle .icon-close {
   flex: none;
 }
 @media (max-width: 900px) {
-  .brand-cross {
+  .brand-cross,
+  .brand-cross--five {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (max-width: 560px) {
-  .brand-cross {
+  .brand-cross,
+  .brand-cross--five {
     grid-template-columns: 1fr;
   }
   .brand-hero-badge .wordmark {
