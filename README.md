@@ -14,7 +14,7 @@ Site estático (HTML, CSS e JavaScript puro) para a NOTEDEBOOKPRO, assistência 
 │  ├─ index.html              Índice do blog
 │  └─ <slug>.html             7 artigos técnicos
 ├─ assistencia-tecnica-notebook-*/
-│  └─ index.html              17 páginas de marca: 8 marcas (Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell e MSI) + 9 linhas gamer/workstation
+│  └─ index.html              19 páginas de marca: 10 marcas (Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell, MSI, VAIO e Compaq) + 9 linhas gamer/workstation
 ├─ privacidade.html           Política de Privacidade (LGPD)
 ├─ 404.html                   Página de erro
 ├─ .htaccess                  HTTPS, www, remoção de .html e rewrite interno (Apache)
@@ -90,14 +90,14 @@ Em hospedagens que não leem `.htaccess` (Netlify, Vercel, Cloudflare Pages), o 
 
 ## Marcas e linhas gamer
 
-São 17 páginas de marca, todas em `/assistencia-tecnica-notebook-<slug>/`:
+São 19 páginas de marca, todas em `/assistencia-tecnica-notebook-<slug>/`:
 
-- **Marcas** (8): Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell e MSI.
+- **Marcas** (10): Dell, HP, Lenovo, Acer, ASUS, Samsung, Avell, MSI, VAIO e Compaq.
 - **Linhas gamer e workstation** (9): Alienware, Razer Blade, Gigabyte/AORUS, Lenovo Legion, HP OMEN, ASUS ROG, Eluktronics, Acer Predator e Acer Nitro.
 
 Cada página tem hero com o wordmark da marca, introdução, chips das linhas atendidas, o bloco **"Características de cada família"** (`<dl class="brand-families">`, com o que muda de projeto para projeto), texto técnico com link para um guia do blog e três dúvidas frequentes. No fim, "Outras marcas e linhas" mostra no máximo 8 páginas relacionadas — 5 do mesmo grupo e 3 do outro —, para não inflar a malha de links.
 
-Na home, a grade de marcas tem a célula **"Modelos gamer"**, que leva à seção `#gamer`, com as 9 linhas em `.brand-cross--five` (5 colunas no desktop, 2 no tablet e 1 no celular).
+Na home, a grade de marcas tem 12 células em 4 colunas no desktop (3 no tablet e 2 no celular): as 10 marcas, a célula **"Outras marcas"** e a célula **"Modelos gamer"**, que leva à seção `#gamer`, com as 9 linhas em `.brand-cross--five` (5 colunas no desktop, 2 no tablet e 1 no celular).
 
 ## Dados de contato
 
@@ -197,10 +197,10 @@ As fotos atuais são de banco de imagens (macros de placa-mãe com tratamento az
 
 O site carrega o contêiner **GTM-MXJTWR** em todas as páginas, em duas variantes:
 
-- **30 páginas geradas** (`gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">`): loader estático, como no snippet oficial;
+- **32 páginas geradas** (`gen-layout.mjs` → função `page()`, logo após `<meta name="viewport">`): loader estático, como no snippet oficial;
 - **home (`index.html`)**: loader **diferido**, que só injeta o `gtm.js` depois de 5 s ou da primeira interação do usuário.
 
-Além do loader no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 31 páginas: loader único (estático ou diferido), dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`; no fim, lista as páginas com carregamento diferido.
+Além do loader no `<head>`, cada página tem o fallback `<noscript>` com o iframe do GTM logo após `<body>`, como recomenda o Google. `node tools/check-gtm.mjs` verifica as 33 páginas: loader único (estático ou diferido), dentro do `<head>`, `dataLayer` inicializado, evento `gtm.js` com `gtm.start`, nenhum resquício de `gtag()` e `<noscript>` no `<body>`; no fim, lista as páginas com carregamento diferido.
 
 ```html
 <!-- Google Tag Manager -->

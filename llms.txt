@@ -44,6 +44,7 @@ Dados oficiais:
 - [Assistência técnica para notebook Avell](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-avell/): Assistência técnica para notebooks Avell em São Paulo. Diagnóstico eletrônico, reparo de placa-mãe e avaliação de modelos gamer e de alto desempenho.
 - [Assistência técnica para notebook MSI](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-msi/): Diagnóstico e reparo para notebooks MSI Modern, Katana, Stealth, Raider e Titan em São Paulo. Avaliação técnica e orçamento aprovado.
 - [Assistência técnica para notebook Alienware](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-alienware/): Diagnóstico e reparo para notebooks Alienware m15, m16, m18, x14 e x16 em São Paulo: placa-mãe, vídeo, carga e refrigeração.
+- [Assistência técnica para notebook Compaq](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-compaq/): Assistência para notebooks Compaq Presario CQ40, CQ45, CQ56, CQ58 e Compaq 610 em São Paulo: carga, dobradiça, tela e placa-mãe.
 - [Assistência técnica para notebook Eluktronics](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-eluktronics/): Assistência para notebooks Eluktronics MECH, MAX, Prometheus e Hydroc em São Paulo: diagnóstico, placa-mãe, térmica e carga.
 - [Assistência técnica para notebook Gigabyte](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-gigabyte/): Diagnóstico e reparo para notebooks Gigabyte AORUS, AERO e G Series em São Paulo: placa-mãe, GPU, refrigeração e conector de carga.
 - [Assistência técnica para notebook Lenovo Legion](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-legion/): Assistência para notebooks Lenovo Legion 5, Legion 7, Slim, Pro e LOQ em São Paulo: placa-mãe, GPU, térmica e conector de carga.
@@ -52,6 +53,7 @@ Dados oficiais:
 - [Assistência técnica para notebook Acer Predator](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-predator/): Assistência para notebooks Acer Predator Helios, Helios Neo e Triton em São Paulo: placa-mãe, GPU, vídeo, carga e térmica.
 - [Assistência técnica para notebook Razer Blade](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-razer/): Assistência para notebooks Razer Blade 14, 15, 16 e 18 em São Paulo: bateria, carga USB-C, vídeo, placa-mãe e refrigeração.
 - [Assistência técnica para notebook ASUS ROG](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-rog/): Diagnóstico e reparo para notebooks ASUS ROG Strix, Zephyrus e Flow em São Paulo: placa-mãe, GPU, vídeo, carga e refrigeração.
+- [Assistência técnica para notebook VAIO](https://www.notedebookpro.com.br/assistencia-tecnica-notebook-vaio/): Assistência para notebooks VAIO Z, SX14, SX12 e FE e para os Sony VAIO Fit, Pro e Duo em São Paulo: bateria, tela, carga e placa-mãe.
 
 ## Guias técnicos
 
